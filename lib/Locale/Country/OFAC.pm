@@ -9,6 +9,9 @@ use Carp;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(get_sanction_by_code);
 
+# VERSION
+# ABSTRACT: Module to look up OFAC Sanctioned Countries
+
 =pod
 
 =encoding utf8
