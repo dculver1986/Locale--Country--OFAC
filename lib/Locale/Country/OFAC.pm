@@ -38,6 +38,8 @@ Takes a country code and returns a true value if it is.
 
 =head1 METHODS
 
+=head2 get_sanction_by_code
+
 my $iran = 'IR';
 
 if (get_sanction_by_code($iran) ) {
@@ -53,9 +55,11 @@ Daniel 'The Man' Culver
 
 =head1 THANKS TO
 
-Robert Stone, drzigman@cpan.org
+Robert Stone, L<< drzigman@cpan.org >>
 
-PerlMonks, www.perlmonks.com
+HostGator
+
+PerlMonks, L<< http://www.perlmonks.com >>
 
 =head1 COPYRIGHT
 
