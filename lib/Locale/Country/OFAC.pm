@@ -25,7 +25,7 @@ Locale::Country::OFAC - Module to look up OFAC Sanctioned Countries
     use strict;
     use warnings;
     use Locale::Country;
-    use Local::Country::OFAC qw( get_sanction_by_code );
+    use Locale::Country::OFAC qw( get_sanction_by_code );
 
     my $cuba = country2code('cuba');
     get_sanction_by_code($cuba);
