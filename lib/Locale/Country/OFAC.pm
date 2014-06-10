@@ -16,7 +16,7 @@ our @EXPORT_OK = qw(get_sanction_by_code);
 
 =encoding utf8
 
-=head1 NAME 
+=head1 NAME
 
 Locale::Country::OFAC
 
@@ -31,11 +31,21 @@ Locale::Country::OFAC
     my $cuba = country2code('cuba');
     get_sanction_by_code($cuba);
 
-=head1 DESCRIPTION 
+=head1 DESCRIPTION
 
 Module to lookup if a country is OFAC Sanctioned.
 Takes a country code and returns a true value if it is.
 
+=head1 METHODS
+
+my $iran = 'IR';
+
+if (get_sanction_by_code($iran) ) {
+    print "Sorry, can't do business- country is Sanctioned\n";
+}
+
+Returns 1 if the country is sanctioned, 0 if not.
+It also accepts lower case and 3 letter country codes.
 
 =head1 AUTHOR
 
