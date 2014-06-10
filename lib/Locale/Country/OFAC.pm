@@ -57,6 +57,8 @@ Daniel 'The Man' Culver
 
 Robert Stone, L<< drzigman@cpan.org >>
 
+Eris Caffee
+
 HostGator
 
 PerlMonks, L<< http://www.perlmonks.com >>
@@ -74,15 +76,8 @@ our %sanctioned_country_codes =
 
 sub get_sanction_by_code {
     my $country_code = shift || croak "get_sanction_by_code requires country code";
-
-    if (   $sanctioned_country_codes{ uc $country_code }
-        || $sanctioned_country_codes{ lc $country_code } )
-    {
-        return 1;
-    }
-    else {
-        return 0;
-    }
+    
+    return exists $sanctioned_country_codes{ uc $country_code } ? 1 : 0;
 }
 
 1;
