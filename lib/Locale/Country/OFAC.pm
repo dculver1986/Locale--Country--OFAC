@@ -76,7 +76,6 @@ our %sanctioned_country_codes =
 
 sub get_sanction_by_code {
     my $country_code = shift || croak "get_sanction_by_code requires country code";
-    
     return exists $sanctioned_country_codes{ uc $country_code } ? 1 : 0;
 }
 
