@@ -54,7 +54,7 @@ Daniel 'The Man' Culver
 
 =head1 THANKS TO
 
-Robert Stone, drzigman@cpan.org
+Robert Stone, C<< drzigman@cpan.org >>
 
 Eris Caffee
 
