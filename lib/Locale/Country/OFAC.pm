@@ -18,14 +18,13 @@ our @EXPORT_OK = qw(get_sanction_by_code);
 
 =head1 NAME
 
-Locale::Country::OFAC
+Locale::Country::OFAC - Module to look up OFAC Sanctioned Countries
 
 =head1 SYNOPSIS
 
     use strict;
     use warnings;
     use Locale::Country;
-
     use Local::Country::OFAC qw( get_sanction_by_code );
 
     my $cuba = country2code('cuba');
