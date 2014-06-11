@@ -35,15 +35,17 @@ Locale::Country::OFAC - Module to look up OFAC Sanctioned Countries
 Module to lookup if a country is OFAC Sanctioned.
 Takes a country code and returns a true value if it is.
 
+OFAC Source: <<L http://www.treasury.gov/resource-center/sanctions/Programs/Pages/Programs.aspx >>
+
 =head1 METHODS
 
 =head2 get_sanction_by_code
 
-my $iran = 'IR';
+    my $iran = 'IR';
 
-if (get_sanction_by_code($iran) ) {
-    print "Sorry, can't do business- country is Sanctioned\n";
-}
+    if (get_sanction_by_code($iran) ) {
+        print "Sorry, can't do business- country is Sanctioned\n";
+    }
 
 Returns 1 if the country is sanctioned, 0 if not.
 It also accepts lower case and 3 letter country codes.
