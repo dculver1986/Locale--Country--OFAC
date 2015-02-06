@@ -7,7 +7,7 @@ use Exporter;
 use Carp;
 
 our @ISA       = qw(Exporter);
-our @EXPORT_OK = qw(get_sanction_by_code);
+our @EXPORT_OK = qw( get_sanction_by_code is_region_sanctioned );
 
 # VERSION
 # ABSTRACT: Module to look up OFAC Sanctioned Countries
@@ -43,16 +43,32 @@ OFAC Source: <<L http://www.treasury.gov/resource-center/sanctions/Programs/Page
 
     my $iran = 'IR';
 
-    if (get_sanction_by_code($iran) ) {
+    if ( get_sanction_by_code($iran) ) {
         print "Sorry, can't do business- country is Sanctioned\n";
     }
 
-Returns 1 if the country is sanctioned, 0 if not.
-It also accepts lower case and 3 letter country codes.
+Returns 1 if the country is sanctioned, 0 if not. It also accepts lower case and 3 letter country codes.
+
+=head2 is_region_sanctioned
+
+    my $russia = 'RU';
+    my $zip    = 95001;
+
+    if ( is_region_sanctioned( $russia, $zip ) ) {
+        print "region is sanctioned \n";
+    }
+
+This method takes a country code and zip code. It returns 1 if it is sanctioned and 0 if not.
+
+=head1 CAVEATS AND LIMITATIONS
+
+Russian and Ukranian country codes are in this module's lookup table,
+but only certain zip codes of them are currently OFAC sanctioned. This is the reasoning
+for creating the is_region_sanctioned method.
 
 =head1 AUTHOR
 
-Daniel 'The Man' Culver
+Daniel Culver,  C<< perlsufi@cpan.org >>
 
 =head1 THANKS TO
 
@@ -71,13 +87,44 @@ This module is free software; you can redistribute it and/or modify it under the
 =cut
 
 
-
-our %sanctioned_country_codes =
-  map { $_ => 1 } qw( MMR MM IRN IR CUB CU SSD SD PRK KP SYR SY );
+our %sanctioned_country_codes = (
+  IRN => 1,
+  IR  => 1,
+  CUB => 1,
+  CU  => 1,
+  SDN => 1,
+  SD  => 1,
+  PRK => 1,
+  KP  => 1,
+  SYR => 1,
+  SY  => 1,
+  UA   => [ 95000..99999, 295000..299999 ], # Ukraine Crimea zip code
+  UKR  => [ 95000..99999, 295000..299999 ],
+  RU   => [ 95000..99999, 295000..299999 ], # Russia Crimea zip code
+  RUS  => [ 95000..99999, 295000..299999 ],
+);
 
 sub get_sanction_by_code {
     my $country_code = shift || croak "get_sanction_by_code requires country code";
     return exists $sanctioned_country_codes{ uc $country_code } ? 1 : 0;
+}
+
+sub is_region_sanctioned {
+    my $country = shift || croak "is_region_sanctioned requires country code";
+    my $zip     = shift || croak "is_region_sanctioned requires zip code";
+
+    my $result;
+    if ( defined $sanctioned_country_codes{uc$country}
+        && exists $sanctioned_country_codes{uc$country} ) {
+        for my $value ( values %sanctioned_country_codes ) {
+            if ( ref $value eq 'ARRAY' ) {
+                if ( (grep { $_ == $zip } @$value ) ) {
+                    return $result = 1;
+                }
+            }
+        }
+    }
+    return exists $sanctioned_country_codes{ uc $country } ? 1 : 0;
 }
 
 1;
