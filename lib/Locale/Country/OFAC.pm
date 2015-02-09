@@ -113,13 +113,12 @@ sub is_region_sanctioned {
     my $country = shift || croak "is_region_sanctioned requires country code";
     my $zip     = shift || croak "is_region_sanctioned requires zip code";
 
-    my $result;
     if ( defined $sanctioned_country_codes{uc$country}
         && exists $sanctioned_country_codes{uc$country} ) {
         for my $value ( values %sanctioned_country_codes ) {
             if ( ref $value eq 'ARRAY' ) {
                 if ( (grep { $_ == $zip } @$value ) ) {
-                    return $result = 1;
+                    return 1;
                 }
             }
         }
