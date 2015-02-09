@@ -51,6 +51,8 @@ Returns 1 if the country is sanctioned, 0 if not. It also accepts lower case and
 
 =head2 is_region_sanctioned
 
+    use Locale::Country::OFAC qw( is_region_sanctioned );
+
     my $russia = 'RU';
     my $zip    = 95001;
 
