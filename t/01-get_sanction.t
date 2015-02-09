@@ -5,12 +5,15 @@ use warnings;
 use Test::Most;
 use Test::Exception;
 
-use Locale::Country;
 use Locale::Country::OFAC qw( get_sanction_by_code is_region_sanctioned );
 use Readonly;
 
 Readonly my $NON_SANCTIONED_STATUS => 0;
 Readonly my $SANCTIONED_STATUS     => 1;
+Readonly my $LOWER_RANGE_MIN       => 95000;
+Readonly my $HIGHER_RANGE_MIN      => 295000;
+Readonly my $MAX                   => 4999;
+
 
 cmp_ok( get_sanction_by_code('DE'),
     '==', $NON_SANCTIONED_STATUS, 'Germany not sanctioned' );
@@ -45,54 +48,45 @@ cmp_ok( get_sanction_by_code('PRK'),
 cmp_ok( get_sanction_by_code('SYR'),
     '==', $SANCTIONED_STATUS, 'Syria is sanctioned' );
 
+cmp_ok( get_sanction_by_code('UA'),
+    '==', $NON_SANCTIONED_STATUS, 'Ukraine not sanctioned (entirely)' );
 
-my $invalid_country = country2code('neverneverland');
-dies_ok { get_sanction_by_code($invalid_country) };
+cmp_ok( get_sanction_by_code('RU'),
+    '==', $NON_SANCTIONED_STATUS, 'Russia not sanctioned (entirely)' );
 
 dies_ok { is_region_sanctioned( 'DE', '') };
 
 dies_ok { is_region_sanctioned('', 123456) };
 
+my $random_num = int( rand($MAX) ) + $LOWER_RANGE_MIN;
 
-for my $num ( 95000..99999 ) {
-    my $ru_crimea_result = is_region_sanctioned('RU', $num);
-    cmp_ok( $ru_crimea_result, '==', $SANCTIONED_STATUS,
-        'Russian Crimean zip correctly sanctioned' );
-    my $rus_crimea_result = is_region_sanctioned('RUS', $num);
-    cmp_ok( $rus_crimea_result, '==', $SANCTIONED_STATUS,
-        'Russian Crimean zip correctly sanctioned' );
+cmp_ok( is_region_sanctioned('RU', $random_num) , '==', $SANCTIONED_STATUS,
+    'Russian Crimean zip correctly sanctioned' );
 
-    my $ua_crimea_result = is_region_sanctioned('UA', $num);
-    cmp_ok( $ua_crimea_result, '==', $SANCTIONED_STATUS,
-        'Ukraine Crimean zip correctly sanctioned' );
+cmp_ok( is_region_sanctioned('RUS', $random_num), '==', $SANCTIONED_STATUS,
+    'Russian Crimean zip correctly sanctioned' );
 
-    my $ukr_crimea_result = is_region_sanctioned('UKR', $num);
-    cmp_ok( $ukr_crimea_result, '==', $SANCTIONED_STATUS,
-        'Ukraine Crimean zip correctly sanctioned' );
+cmp_ok( is_region_sanctioned('UA', $random_num), '==', $SANCTIONED_STATUS,
+    'Ukraine Crimean zip correctly sanctioned' );
 
-}
+cmp_ok( is_region_sanctioned('UKR', $random_num), '==', $SANCTIONED_STATUS,
+    'Ukraine Crimean zip correctly sanctioned' );
 
-for my $int ( 295000..295999 ) {
-    my $ru_crimea_result = is_region_sanctioned('RU', $int );
-    cmp_ok( $ru_crimea_result, '==', $SANCTIONED_STATUS,
-        'Russian Crimean zip correctly sanctioned' );
-    my $rus_crimea_result = is_region_sanctioned('RUS', $int );
-    cmp_ok( $rus_crimea_result, '==', $SANCTIONED_STATUS,
-        'Russian Crimean zip correctly sanctioned' );
+my $random_int = int( rand($MAX) ) + $HIGHER_RANGE_MIN;
 
-    my $ua_crimea_result = is_region_sanctioned('UA', $int );
-    cmp_ok( $ua_crimea_result, '==', $SANCTIONED_STATUS,
-        'Ukraine Crimean zip correctly sanctioned' );
+cmp_ok( is_region_sanctioned('RU', $random_int ), '==', $SANCTIONED_STATUS,
+    'Russian Crimean zip correctly sanctioned' );
 
-    my $ukr_crimea_result = is_region_sanctioned('UKR', $int );
-    cmp_ok( $ukr_crimea_result, '==', $SANCTIONED_STATUS,
-        'Ukraine Crimean zip correctly sanctioned' );
+cmp_ok( is_region_sanctioned('RUS', $random_int ), '==', $SANCTIONED_STATUS,
+    'Russian Crimean zip correctly sanctioned' );
 
+cmp_ok( is_region_sanctioned('UA', $random_int ), '==', $SANCTIONED_STATUS,
+    'Ukraine Crimean zip correctly sanctioned' );
 
-}
+cmp_ok( is_region_sanctioned('UKR', $random_int ), '==', $SANCTIONED_STATUS,
+    'Ukraine Crimean zip correctly sanctioned' );
 
-my $ger_result = is_region_sanctioned('DE', 12345);
-cmp_ok($ger_result, '==', $NON_SANCTIONED_STATUS,
+cmp_ok( is_region_sanctioned('DE', 12345), '==', $NON_SANCTIONED_STATUS,
     'Germany zip correctly not sanctioned' );
 
 done_testing;

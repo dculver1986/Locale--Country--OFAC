@@ -5,6 +5,9 @@ use warnings;
 
 use Exporter;
 use Carp;
+use Readonly;
+
+Readonly my @CRIMEA_REGION => (95000..99999, 295000..299999 );
 
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw( get_sanction_by_code is_region_sanctioned );
@@ -24,11 +27,9 @@ Locale::Country::OFAC - Module to look up OFAC Sanctioned Countries
 
     use strict;
     use warnings;
-    use Locale::Country;
     use Locale::Country::OFAC qw( get_sanction_by_code );
 
-    my $cuba = country2code('cuba');
-    get_sanction_by_code($cuba);
+    my $sanction = get_sanction_by_code('IR');
 
 =head1 DESCRIPTION
 
@@ -76,6 +77,8 @@ Daniel Culver,  C<< perlsufi@cpan.org >>
 
 Robert Stone, C<< drzigman@cpan.org >>
 
+Doug Schrag
+
 Eris Caffee
 
 HostGator
@@ -100,23 +103,24 @@ our %sanctioned_country_codes = (
   KP  => 1,
   SYR => 1,
   SY  => 1,
-  UA   => [ 95000..99999, 295000..299999 ], # Ukraine Crimea zip code
-  UKR  => [ 95000..99999, 295000..299999 ],
-  RU   => [ 95000..99999, 295000..299999 ], # Russia Crimea zip code
-  RUS  => [ 95000..99999, 295000..299999 ],
+  UA   => \@CRIMEA_REGION, # Ukraine Crimea zip code
+  UKR  => \@CRIMEA_REGION,
+  RU   => \@CRIMEA_REGION, # Russia Crimea zip code
+  RUS  => \@CRIMEA_REGION,
 );
 
 sub get_sanction_by_code {
     my $country_code = shift || croak "get_sanction_by_code requires country code";
-    return exists $sanctioned_country_codes{ uc $country_code } ? 1 : 0;
+
+    my $country_sanction = $sanctioned_country_codes{uc $country_code};
+    return defined $country_sanction && !ref $country_sanction || 0;
 }
 
 sub is_region_sanctioned {
     my $country = shift || croak "is_region_sanctioned requires country code";
     my $zip     = shift || croak "is_region_sanctioned requires zip code";
 
-    if ( defined $sanctioned_country_codes{uc$country}
-        && exists $sanctioned_country_codes{uc$country} ) {
+    if ( defined $sanctioned_country_codes{uc$country} ) {
         for my $value ( values %sanctioned_country_codes ) {
             if ( ref $value eq 'ARRAY' ) {
                 if ( (grep { $_ == $zip } @$value ) ) {
