@@ -5,6 +5,8 @@ use warnings;
 
 use Exporter;
 use Carp;
+
+use List::Util qw(any);
 use Readonly;
 
 Readonly my @CRIMEA_REGION => (95000..99999, 295000..299999 );
@@ -121,15 +123,14 @@ sub is_region_sanctioned {
     my $zip     = shift || croak "is_region_sanctioned requires zip code";
 
     if ( defined $sanctioned_country_codes{uc$country} ) {
-        for my $value ( values %sanctioned_country_codes ) {
-            if ( ref $value eq 'ARRAY' ) {
-                if ( (grep { $_ == $zip } @$value ) ) {
-                    return 1;
-                }
+        my $value = $sanctioned_country_codes{uc$country};
+        if ( ref $value eq 'ARRAY' ) {
+            if ( any { $_ == $zip } @$value  ) {
+                return 1;
             }
         }
     }
-    return exists $sanctioned_country_codes{ uc $country } ? 1 : 0;
+    return get_sanction_by_code($country);
 }
 
 1;

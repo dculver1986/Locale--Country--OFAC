@@ -12,7 +12,7 @@ Readonly my $NON_SANCTIONED_STATUS => 0;
 Readonly my $SANCTIONED_STATUS     => 1;
 Readonly my $LOWER_RANGE_MIN       => 95000;
 Readonly my $HIGHER_RANGE_MIN      => 295000;
-Readonly my $MAX                   => 4999;
+Readonly my $MAX                   => 5000;
 
 
 cmp_ok( get_sanction_by_code('DE'),
@@ -59,6 +59,18 @@ dies_ok { is_region_sanctioned( 'DE', '') };
 dies_ok { is_region_sanctioned('', 123456) };
 
 my $random_num = int( rand($MAX) ) + $LOWER_RANGE_MIN;
+
+cmp_ok( is_region_sanctioned('RU', $LOWER_RANGE_MIN - 1 ), '==',
+    $NON_SANCTIONED_STATUS, 'Zip just below range not sanctioned');
+
+cmp_ok( is_region_sanctioned('RU', $LOWER_RANGE_MIN + $MAX + 1 ), '==',
+    $NON_SANCTIONED_STATUS, 'Zip just above range not sanctioned');
+
+cmp_ok( is_region_sanctioned('RU', $HIGHER_RANGE_MIN - 1 ), '==',
+    $NON_SANCTIONED_STATUS, 'Zip just below range not sanctioned');
+
+cmp_ok( is_region_sanctioned('RU', $HIGHER_RANGE_MIN + $MAX + 1 ), '==',
+    $NON_SANCTIONED_STATUS, 'Zip just above range not sanctioned');
 
 cmp_ok( is_region_sanctioned('RU', $random_num) , '==', $SANCTIONED_STATUS,
     'Russian Crimean zip correctly sanctioned' );
