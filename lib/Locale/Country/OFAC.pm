@@ -14,7 +14,7 @@ Readonly my @CRIMEA_REGION => (95000..99999, 295000..299999 );
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw( get_sanction_by_code is_region_sanctioned );
 
-# VERSION
+# VERSION 1.1.0
 # ABSTRACT: Module to look up OFAC Sanctioned Countries
 
 =pod
