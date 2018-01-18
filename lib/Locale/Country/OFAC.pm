@@ -85,8 +85,6 @@ Eris Caffee
 
 HostGator
 
-PerlMonks, L<< http://www.perlmonks.com >>
-
 =head1 COPYRIGHT
 
 This module is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
@@ -99,8 +97,6 @@ our %sanctioned_country_codes = (
   IR  => 1,
   CUB => 1,
   CU  => 1,
-  SDN => 1,
-  SD  => 1,
   PRK => 1,
   KP  => 1,
   SYR => 1,
