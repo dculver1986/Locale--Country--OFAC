@@ -29,6 +29,11 @@ subtest 'Country With No Sanctions' => sub {
         'Germany zip correctly not sanctioned' );
 };
 
+subtest 'Entire Country is Sanctioned' => sub {
+    cmp_ok( is_region_sanctioned('IR', 12345), '==', $SANCTIONED_STATUS,
+        'All regions report as sanctioned' );
+};
+
 subtest 'Country Has Region Specific Sanctions' => sub {
     subtest 'Unsanctioned Region' => sub {
         for my $country_code (qw( RU RUS UA UKR )) {
