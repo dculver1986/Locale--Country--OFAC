@@ -88,7 +88,7 @@ This method takes a country and subcountry code.  It returnes 1 if the provided 
 
 =head3 CAVEATS AND LIMITATIONS
 
-All of Crimea is considered sanctioned (when searching for ISO-3166-2:UA 43.
+All of Crimea is considered sanctioned (when searching for ISO-3166-2:UA 43 ).
 
 =head1 AUTHOR
 
